@@ -1,0 +1,30 @@
+# Java and Maven
+app/target/
+*.class
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfplan
+crash.log
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# IDE and operating-system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Scanner and test output
+dependency-check-report.*
+reports/
+coverage/
+.build/

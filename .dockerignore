@@ -1,0 +1,39 @@
+# Version control and local metadata
+.git
+.github
+.agents
+.codex
+
+# Build output
+app/target
+.build
+reports
+coverage
+
+# Infrastructure local state
+terraform/.terraform
+terraform/**/*.tfstate
+terraform/**/*.tfstate.*
+terraform/**/*.tfplan
+
+# Local environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+
+# Documentation and non-runtime project assets
+architecture
+docs
+screenshots
+examples
+tests
+
+# Operating-system and IDE files
+.idea
+.vscode
+*.iml
+.DS_Store
+Thumbs.db

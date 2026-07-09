@@ -1,0 +1,76 @@
+rules:
+  - id: java-dangerous-runtime-exec
+    message: Avoid Runtime.exec because it can lead to command injection when user-controlled data reaches the command.
+    severity: ERROR
+    languages:
+      - java
+    patterns:
+      - pattern: Runtime.getRuntime().exec(...)
+    metadata:
+      category: security
+      technology:
+        - java
+      confidence: medium
+      impact: high
+      likelihood: medium
+      owasp:
+        - A03:2021 - Injection
+
+  - id: java-dangerous-process-builder
+    message: Avoid ProcessBuilder for user-influenced commands; prefer safe APIs or strict allowlists.
+    severity: ERROR
+    languages:
+      - java
+    patterns:
+      - pattern: new ProcessBuilder(...)
+    metadata:
+      category: security
+      technology:
+        - java
+      confidence: medium
+      impact: high
+      likelihood: medium
+      owasp:
+        - A03:2021 - Injection
+
+  - id: java-spring-actuator-show-details-always
+    message: Do not expose detailed actuator health information in production.
+    severity: ERROR
+    languages:
+      - generic
+    paths:
+      include:
+        - /app/src/main/resources/application.yml
+        - /app/src/main/resources/application.yaml
+    patterns:
+      - pattern-either:
+          - pattern: "show-details: always"
+          - pattern: "show-components: always"
+    metadata:
+      category: security
+      technology:
+        - spring
+      confidence: high
+      impact: medium
+      likelihood: medium
+      owasp:
+        - A05:2021 - Security Misconfiguration
+
+  - id: dockerfile-root-user
+    message: Container runtime image should not run as root. Set a non-root USER.
+    severity: ERROR
+    languages:
+      - dockerfile
+    patterns:
+      - pattern-either:
+          - pattern: USER root
+          - pattern: USER 0
+    metadata:
+      category: security
+      technology:
+        - docker
+      confidence: high
+      impact: medium
+      likelihood: medium
+      owasp:
+        - A05:2021 - Security Misconfiguration

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <!--
+      Suppressions must be narrow, reviewed, and time-bound.
+
+      Do not add broad suppressions to make the pipeline pass.
+      If a vulnerability is real, upgrade the dependency or document an approved exception.
+
+      Example shape:
+
+      <suppress until="2026-12-31Z">
+          <notes><![CDATA[
+          Approved exception ID: SEC-EXAMPLE-001
+          Owner: platform-security
+          Reason: false positive or no reachable vulnerable code path
+          ]]></notes>
+          <packageUrl regex="true">^pkg:maven/group/artifact@.*$</packageUrl>
+          <cve>CVE-YYYY-NNNN</cve>
+      </suppress>
+    -->
+</suppressions>

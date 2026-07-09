@@ -1,0 +1,18 @@
+title = "devsecops-pipeline Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Repository-wide allowlist for documented non-secret test data"
+paths = [
+  '''(^|/)docs/.*''',
+  '''(^|/)screenshots/.*''',
+  '''(^|/)README\.md$'''
+]
+
+regexes = [
+  '''(?i)REPLACE_WITH_[A-Z0-9_]+''',
+  '''(?i)example[_-]?secret''',
+  '''(?i)dummy[_-]?token'''
+]
