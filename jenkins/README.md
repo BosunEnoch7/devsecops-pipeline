@@ -49,6 +49,14 @@ Dependency-Check expects this Jenkins secret text credential:
 nvd-api-key
 ```
 
+ECR push expects this Jenkins AWS credential:
+
+```text
+aws-ecr-push
+```
+
+This credential should be scoped to the target ECR repository and should not be reused for broad administrative access.
+
 ## Expected Jenkins plugins
 
 The current Jenkinsfile uses common Pipeline features and expects these Jenkins capabilities/plugins:

@@ -98,6 +98,25 @@ Blocking rule:
 
 The full JSON report is retained for triage, even when the blocking table scan focuses on actionable fixed vulnerabilities.
 
+### Artifact promotion
+
+After image scanning, Jenkins pushes the verified image to Amazon ECR and captures the immutable digest.
+
+Evidence:
+
+```text
+evidence/ecr/image-uri-with-digest.txt
+```
+
+Blocking rule:
+
+- Release cannot continue if the image digest is missing or cannot be captured.
+
+Security reason:
+
+- Tags are mutable.
+- Digests identify exact image content.
+
 ### Infrastructure as Code validation
 
 Terraform is validated and scanned before deployment.

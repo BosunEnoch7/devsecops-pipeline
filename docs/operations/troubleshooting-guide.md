@@ -290,6 +290,38 @@ The pipeline should fail closed in both cases, but the response is different:
 - Vulnerability finding: patch the base image/package or document an approved exception.
 - Scanner failure: fix network/cache/tooling and rerun.
 
+## ECR push fails in Jenkins
+
+### Symptom
+
+The release pipeline fails during the `Push image to Amazon ECR` stage.
+
+### Likely causes
+
+- Jenkins credential `aws-ecr-push` is missing or incorrect.
+- The AWS region parameter is wrong.
+- The ECR repository does not exist.
+- The Jenkins agent cannot reach AWS ECR.
+- Docker is not available on the Jenkins agent.
+
+### Fix
+
+Confirm these values:
+
+```text
+AWS_REGION
+ECR_REPOSITORY
+aws-ecr-push
+```
+
+Confirm the repository exists before running the release job:
+
+```powershell
+aws ecr describe-repositories --region <region> --repository-names <repository>
+```
+
+The pipeline intentionally does not create the repository. Terraform owns ECR repository creation.
+
 ## Terraform validate fails in CI because backend credentials are missing
 
 ### Symptom

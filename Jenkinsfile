@@ -9,6 +9,11 @@ pipeline {
         timeout(time: 60, unit: 'MINUTES')
     }
 
+    parameters {
+        string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: 'AWS region that hosts the target ECR repository')
+        string(name: 'ECR_REPOSITORY', defaultValue: 'secure-delivery-api', description: 'Existing ECR repository name for the application image')
+    }
+
     environment {
         APP_NAME = 'secure-delivery-api'
         APP_DIR = 'app'
@@ -276,11 +281,55 @@ pipeline {
 
         stage('Push image to Amazon ECR') {
             steps {
-                sh '''
-                    set -eu
-                    mkdir -p "$EVIDENCE_DIR/ecr"
-                    echo "PENDING: Amazon ECR login, tag, push, and digest capture will be wired in a later phase." | tee "$EVIDENCE_DIR/ecr/status.txt"
-                '''
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ecr-push']]) {
+                    sh '''
+                        set -eu
+                        mkdir -p "$EVIDENCE_DIR/ecr"
+
+                        LOCAL_IMAGE="$(cat "$EVIDENCE_DIR/local-image-name.txt")"
+                        COMMIT_SHORT="$(git rev-parse --short=12 HEAD)"
+                        REMOTE_TAG="${BUILD_NUMBER}-${COMMIT_SHORT}"
+
+                        AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+                        ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+                        REMOTE_IMAGE="${ECR_REGISTRY}/${ECR_REPOSITORY}:${REMOTE_TAG}"
+
+                        aws ecr describe-repositories \
+                          --region "$AWS_REGION" \
+                          --repository-names "$ECR_REPOSITORY" > "$EVIDENCE_DIR/ecr/repository.json"
+
+                        set +x
+                        aws ecr get-login-password --region "$AWS_REGION" \
+                          | docker login --username AWS --password-stdin "$ECR_REGISTRY"
+                        set -x
+
+                        docker tag "$LOCAL_IMAGE" "$REMOTE_IMAGE"
+                        docker push "$REMOTE_IMAGE"
+
+                        IMAGE_DIGEST="$(aws ecr describe-images \
+                          --region "$AWS_REGION" \
+                          --repository-name "$ECR_REPOSITORY" \
+                          --image-ids imageTag="$REMOTE_TAG" \
+                          --query 'imageDetails[0].imageDigest' \
+                          --output text)"
+
+                        test -n "$IMAGE_DIGEST"
+                        test "$IMAGE_DIGEST" != "None"
+
+                        echo "$AWS_ACCOUNT_ID" > "$EVIDENCE_DIR/ecr/aws-account-id.txt"
+                        echo "$ECR_REGISTRY" > "$EVIDENCE_DIR/ecr/ecr-registry.txt"
+                        echo "$ECR_REPOSITORY" > "$EVIDENCE_DIR/ecr/ecr-repository.txt"
+                        echo "$REMOTE_IMAGE" > "$EVIDENCE_DIR/ecr/remote-image-tag.txt"
+                        echo "$IMAGE_DIGEST" > "$EVIDENCE_DIR/ecr/image-digest.txt"
+                        echo "${ECR_REGISTRY}/${ECR_REPOSITORY}@${IMAGE_DIGEST}" > "$EVIDENCE_DIR/ecr/image-uri-with-digest.txt"
+                        echo "ECR push completed and digest captured." | tee "$EVIDENCE_DIR/ecr/status.txt"
+                    '''
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'evidence/ecr/**'
+                }
             }
         }
 
@@ -288,7 +337,7 @@ pipeline {
             steps {
                 timeout(time: 30, unit: 'MINUTES') {
                     input(
-                        message: 'Approve production deployment for the verified image evidence?',
+                        message: 'Approve production deployment for the verified ECR image digest?',
                         ok: 'Approve release',
                         submitterParameter: 'APPROVED_BY'
                     )

@@ -103,12 +103,13 @@ Why it matters:
 
 ## 12. Push image to Amazon ECR
 
-Jenkins will push the verified image to ECR.
+Jenkins pushes the verified image to ECR and captures the immutable digest.
 
 Why it matters:
 
 - ECR becomes the trusted image registry.
 - Deployment should pull by digest, not by mutable tag alone.
+- Manual approval should reference the digest-based image URI.
 
 ## 13. Manual production approval
 
