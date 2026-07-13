@@ -290,6 +290,28 @@ The pipeline should fail closed in both cases, but the response is different:
 - Vulnerability finding: patch the base image/package or document an approved exception.
 - Scanner failure: fix network/cache/tooling and rerun.
 
+## Terraform validate fails in CI because backend credentials are missing
+
+### Symptom
+
+Terraform validation fails while trying to initialize the remote backend.
+
+### Likely cause
+
+The validation job is attempting to initialize the real backend instead of validating syntax/module structure only.
+
+### Fix
+
+For validation-only jobs, use:
+
+```text
+terraform init -backend=false
+```
+
+This is what the repository validation script and Jenkinsfile use.
+
+Remote backend access should be required only for plan/apply workflows in trusted deployment stages.
+
 ## Container starts but the first HTTP request fails
 
 ### Symptom

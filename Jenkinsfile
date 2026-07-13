@@ -179,8 +179,35 @@ pipeline {
                 sh '''
                     set -eu
                     mkdir -p "$EVIDENCE_DIR/terraform"
-                    echo "PENDING: Terraform fmt/init/validate and IaC scanning will be wired in a later phase." | tee "$EVIDENCE_DIR/terraform/status.txt"
+                    terraform fmt -check -recursive terraform | tee "$EVIDENCE_DIR/terraform/fmt.txt"
+
+                    for env_dir in terraform/environments/*; do
+                      if [ -d "$env_dir" ] && ls "$env_dir"/*.tf >/dev/null 2>&1; then
+                        env_name="$(basename "$env_dir")"
+                        terraform -chdir="$env_dir" init -backend=false -no-color | tee "$EVIDENCE_DIR/terraform/${env_name}-init.txt"
+                        terraform -chdir="$env_dir" validate -no-color | tee "$EVIDENCE_DIR/terraform/${env_name}-validate.txt"
+                      fi
+                    done
+
+                    trivy config \
+                      --format json \
+                      --output "$EVIDENCE_DIR/terraform/trivy-iac.json" \
+                      terraform
+
+                    trivy config \
+                      --format table \
+                      --output "$EVIDENCE_DIR/terraform/trivy-iac-table.txt" \
+                      --severity HIGH,CRITICAL \
+                      --exit-code 1 \
+                      terraform
+
+                    echo "Terraform validation and IaC scan completed with no blocking findings." | tee "$EVIDENCE_DIR/terraform/status.txt"
                 '''
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'evidence/terraform/**'
+                }
             }
         }
 

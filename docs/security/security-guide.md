@@ -98,6 +98,23 @@ Blocking rule:
 
 The full JSON report is retained for triage, even when the blocking table scan focuses on actionable fixed vulnerabilities.
 
+### Infrastructure as Code validation
+
+Terraform is validated and scanned before deployment.
+
+Local helpers:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-terraform.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-iac-scan.ps1
+```
+
+Blocking rules:
+
+- Terraform formatting failure blocks release.
+- Terraform validation failure blocks release.
+- High/critical IaC misconfigurations block release.
+
 ## Security model
 
 The platform treats source contributions as untrusted and increases trust only after independent controls produce evidence. Trust attaches to an immutable artifact digest, not to a branch name or mutable image tag.
