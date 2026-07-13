@@ -57,11 +57,31 @@ pipeline {
 
         stage('SonarQube quality gate') {
             steps {
-                sh '''
-                    set -eu
-                    mkdir -p "$EVIDENCE_DIR/sonarqube"
-                    echo "PENDING: SonarQube scanner and quality gate will be wired in a later phase." | tee "$EVIDENCE_DIR/sonarqube/status.txt"
-                '''
+                withSonarQubeEnv('sonarqube') {
+                    dir("${APP_DIR}") {
+                        sh '''
+                            set -eu
+                            mkdir -p "../$EVIDENCE_DIR/sonarqube"
+                            mvn --batch-mode \
+                              org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356:sonar
+                            echo "SonarQube analysis submitted." | tee "../$EVIDENCE_DIR/sonarqube/analysis-status.txt"
+                        '''
+                    }
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    script {
+                        def qualityGate = waitForQualityGate()
+                        writeFile file: "${EVIDENCE_DIR}/sonarqube/quality-gate-status.txt", text: "status=${qualityGate.status}\n"
+                        if (qualityGate.status != 'OK') {
+                            error "SonarQube quality gate failed with status: ${qualityGate.status}"
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'evidence/sonarqube/**'
+                }
             }
         }
 

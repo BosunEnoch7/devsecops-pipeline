@@ -58,9 +58,24 @@ The current Jenkinsfile uses common Pipeline features and expects these Jenkins 
 - Git
 - JUnit
 - Credentials Binding, when credentialed stages are added later
+- SonarQube Scanner for Jenkins
 - AnsiColor, because the pipeline enables `ansiColor('xterm')`
 
 If AnsiColor is not installed, either install the plugin or remove the `ansiColor('xterm')` option.
+
+## SonarQube Jenkins configuration
+
+Configure a SonarQube server in Jenkins with this exact name:
+
+```text
+sonarqube
+```
+
+The SonarQube server must send quality-gate webhooks to:
+
+```text
+<jenkins-url>/sonarqube-webhook/
+```
 
 ## Evidence model
 

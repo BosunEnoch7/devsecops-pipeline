@@ -225,6 +225,36 @@ The release pipeline should fail closed in both cases, but the response is diffe
 - Vulnerability finding: upgrade, remove, replace, or document an approved exception.
 - Scanner/update failure: fix network/cache/tooling and rerun.
 
+## Jenkins waits forever for SonarQube quality gate
+
+### Symptom
+
+Jenkins submits SonarQube analysis but does not receive a quality gate result.
+
+### Likely cause
+
+The SonarQube webhook is missing or points to the wrong Jenkins URL.
+
+### Fix
+
+Configure a SonarQube webhook:
+
+```text
+<jenkins-url>/sonarqube-webhook/
+```
+
+Also confirm Jenkins has a SonarQube server configured with this exact name:
+
+```text
+sonarqube
+```
+
+The Jenkinsfile uses that name in:
+
+```text
+withSonarQubeEnv('sonarqube')
+```
+
 ## Container starts but the first HTTP request fails
 
 ### Symptom

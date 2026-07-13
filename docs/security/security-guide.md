@@ -54,6 +54,28 @@ Blocking rule:
 
 - CVSS `7.0` or higher blocks release unless an approved exception exists.
 
+### Code quality gate
+
+SonarQube evaluates code quality, maintainability, reliability, security hotspots, duplication, and test coverage.
+
+Configuration:
+
+```text
+app/pom.xml
+app/sonar-project.properties
+```
+
+Jenkins integration:
+
+```text
+withSonarQubeEnv('sonarqube')
+waitForQualityGate()
+```
+
+Blocking rule:
+
+- Any failed or unavailable SonarQube quality gate blocks release.
+
 ## Security model
 
 The platform treats source contributions as untrusted and increases trust only after independent controls produce evidence. Trust attaches to an immutable artifact digest, not to a branch name or mutable image tag.
