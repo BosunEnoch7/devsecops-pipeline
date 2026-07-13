@@ -1,0 +1,20 @@
+cache:
+  clear: false
+
+db:
+  skip-update: false
+
+vulnerability:
+  pkg-types:
+    - os
+    - library
+
+format: table
+
+severity:
+  - HIGH
+  - CRITICAL
+
+ignore-unfixed: true
+
+exit-code: 1

@@ -76,6 +76,28 @@ Blocking rule:
 
 - Any failed or unavailable SonarQube quality gate blocks release.
 
+### Container image scanning
+
+Trivy scans the built container image for operating system and language package vulnerabilities.
+
+Configuration:
+
+```text
+security/trivy/trivy.yaml
+```
+
+Local helper:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-trivy-image-scan.ps1 -Image secure-delivery-api:offline-test
+```
+
+Blocking rule:
+
+- `HIGH` and `CRITICAL` fixed vulnerabilities block release.
+
+The full JSON report is retained for triage, even when the blocking table scan focuses on actionable fixed vulnerabilities.
+
 ## Security model
 
 The platform treats source contributions as untrusted and increases trust only after independent controls produce evidence. Trust attaches to an immutable artifact digest, not to a branch name or mutable image tag.

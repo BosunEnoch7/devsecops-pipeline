@@ -255,6 +255,41 @@ The Jenkinsfile uses that name in:
 withSonarQubeEnv('sonarqube')
 ```
 
+## Trivy first run is slow or cannot download vulnerability database
+
+### Symptom
+
+The Trivy scan takes a long time or fails before producing reports.
+
+### Likely cause
+
+Trivy needs to download or update its vulnerability database. Restricted networks, registry outages, or proxy issues can block the update.
+
+### Fix
+
+Confirm the local machine or Jenkins agent can reach the Trivy database registry, then rerun:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-trivy-image-scan.ps1 -Image secure-delivery-api:offline-test
+```
+
+If the Java vulnerability database is too slow for local validation, validate the OS-package path only:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run-trivy-image-scan.ps1 -Image secure-delivery-api:offline-test -PackageTypes os
+```
+
+Do not treat OS-only local validation as the full Jenkins policy. Jenkins should scan both OS and language packages.
+
+### Important distinction
+
+A Trivy execution/database failure is not the same thing as a container vulnerability finding.
+
+The pipeline should fail closed in both cases, but the response is different:
+
+- Vulnerability finding: patch the base image/package or document an approved exception.
+- Scanner failure: fix network/cache/tooling and rerun.
+
 ## Container starts but the first HTTP request fails
 
 ### Symptom

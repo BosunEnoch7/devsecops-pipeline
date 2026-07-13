@@ -41,7 +41,7 @@ The Jenkins agent that runs this pipeline should eventually have:
 
 We will introduce and validate these tools one phase at a time.
 
-Gitleaks, Semgrep, and Maven-based OWASP Dependency-Check are now required release tools. If any required tool is missing from the Jenkins agent, the related stage must fail rather than silently pass.
+Gitleaks, Semgrep, Maven-based OWASP Dependency-Check, and Trivy are now required release tools. If any required tool is missing from the Jenkins agent, the related stage must fail rather than silently pass.
 
 Dependency-Check expects this Jenkins secret text credential:
 

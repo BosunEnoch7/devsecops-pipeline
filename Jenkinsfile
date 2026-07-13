@@ -209,8 +209,29 @@ pipeline {
                 sh '''
                     set -eu
                     mkdir -p "$EVIDENCE_DIR/trivy"
-                    echo "PENDING: Trivy image scan will be wired in a later phase." | tee "$EVIDENCE_DIR/trivy/status.txt"
+                    LOCAL_IMAGE="$(cat "$EVIDENCE_DIR/local-image-name.txt")"
+                    trivy image \
+                      --scanners vuln \
+                      --format json \
+                      --output "$EVIDENCE_DIR/trivy/trivy-image.json" \
+                      --pkg-types os,library \
+                      "$LOCAL_IMAGE"
+                    trivy image \
+                      --scanners vuln \
+                      --format table \
+                      --output "$EVIDENCE_DIR/trivy/trivy-image-table.txt" \
+                      --severity HIGH,CRITICAL \
+                      --ignore-unfixed \
+                      --exit-code 1 \
+                      --pkg-types os,library \
+                      "$LOCAL_IMAGE"
+                    echo "Trivy image scan completed with no blocking findings." | tee "$EVIDENCE_DIR/trivy/status.txt"
                 '''
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'evidence/trivy/**'
+                }
             }
         }
 
