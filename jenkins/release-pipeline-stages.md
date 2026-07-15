@@ -113,12 +113,13 @@ Why it matters:
 
 ## 13. Manual production approval
 
-A human approves production release after reviewing evidence.
+A human approves production release after reviewing evidence and the exact ECR image digest.
 
 Why it matters:
 
 - Manual approval creates an intentional release decision.
 - The approver should approve a specific artifact and evidence set.
+- Approval by digest prevents mutable-tag ambiguity.
 
 ## 14. Deployment
 

@@ -117,6 +117,14 @@ Security reason:
 - Tags are mutable.
 - Digests identify exact image content.
 
+### Manual approval
+
+Production approval must reference the digest-based ECR image URI.
+
+Blocking rule:
+
+- Approval is blocked if the digest URI is missing or does not contain `@sha256:`.
+
 ### Infrastructure as Code validation
 
 Terraform is validated and scanned before deployment.

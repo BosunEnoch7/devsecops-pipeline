@@ -33,10 +33,31 @@ image-uri-with-digest.txt
 
 Deployment should use that digest-based URI, not a mutable tag alone.
 
+## Manual approval
+
+Jenkins displays the digest-based image URI during manual approval.
+
+Approval is blocked if the digest is missing or malformed.
+
+Approval evidence is written to:
+
+```text
+evidence/production-approval.txt
+evidence/approved-image-uri.txt
+```
+
+## Runtime deployment contract
+
+See:
+
+```text
+docs/deployment/runtime-deployment-contract.md
+```
+
+The current Jenkins deployment stage records the approved digest and marks runtime deployment as deferred until ECS infrastructure is implemented.
+
 See:
 
 ```text
 docs/deployment/ecr-promotion-guide.md
 ```
-
-To be developed during the deployment phase.

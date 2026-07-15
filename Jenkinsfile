@@ -335,18 +335,33 @@ pipeline {
 
         stage('Manual production approval') {
             steps {
-                timeout(time: 30, unit: 'MINUTES') {
-                    input(
-                        message: 'Approve production deployment for the verified ECR image digest?',
-                        ok: 'Approve release',
-                        submitterParameter: 'APPROVED_BY'
-                    )
+                script {
+                    def digestUri = readFile("${EVIDENCE_DIR}/ecr/image-uri-with-digest.txt").trim()
+                    if (!digestUri.contains('@sha256:')) {
+                        error "Approval blocked: ECR digest URI is missing or invalid: ${digestUri}"
+                    }
+
+                    timeout(time: 30, unit: 'MINUTES') {
+                        input(
+                            message: "Approve production deployment for this immutable image?\n\n${digestUri}",
+                            ok: 'Approve release',
+                            submitterParameter: 'APPROVED_BY'
+                        )
+                    }
+
+                    writeFile file: "${EVIDENCE_DIR}/approved-image-uri.txt", text: "${digestUri}\n"
                 }
                 sh '''
                     set -eu
-                    echo "Approved by: ${APPROVED_BY:-unknown}" | tee "$EVIDENCE_DIR/production-approval.txt"
+                    echo "Approved image: $(cat "$EVIDENCE_DIR/approved-image-uri.txt")" | tee "$EVIDENCE_DIR/production-approval.txt"
+                    echo "Approved by: ${APPROVED_BY:-unknown}" >> "$EVIDENCE_DIR/production-approval.txt"
                     date -u +%Y-%m-%dT%H:%M:%SZ >> "$EVIDENCE_DIR/production-approval.txt"
                 '''
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'evidence/approved-image-uri.txt,evidence/production-approval.txt'
+                }
             }
         }
 
@@ -355,8 +370,17 @@ pipeline {
                 sh '''
                     set -eu
                     mkdir -p "$EVIDENCE_DIR/deployment"
-                    echo "PENDING: Deployment will be wired after ECR and infrastructure phases." | tee "$EVIDENCE_DIR/deployment/status.txt"
+                    APPROVED_IMAGE="$(cat "$EVIDENCE_DIR/approved-image-uri.txt")"
+                    test -n "$APPROVED_IMAGE"
+                    echo "$APPROVED_IMAGE" > "$EVIDENCE_DIR/deployment/deployment-image-uri.txt"
+                    echo "DEPLOYMENT_DEFERRED: ECS service deployment will be wired after runtime infrastructure is created." | tee "$EVIDENCE_DIR/deployment/status.txt"
+                    echo "Approved digest is ready for deployment: $APPROVED_IMAGE" >> "$EVIDENCE_DIR/deployment/status.txt"
                 '''
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'evidence/deployment/**'
+                }
             }
         }
     }
