@@ -56,7 +56,7 @@ devsecops-pipeline/
   app/                      Spring Boot sample service
   architecture/             Architecture, threat model, ADRs
   docker/                   Hardened application Dockerfile
-  docs/                     Deployment, security, operations, career docs
+  docs/                     Deployment, security, operations, and project docs
   jenkins/                  Jenkins release pipeline documentation
   scripts/                  Local verification and scanner helpers
   security/                 Scanner config and security policies
@@ -89,8 +89,6 @@ Some scanners require network access to vulnerability databases. See the trouble
 - [Evidence guide](docs/project/evidence-guide.md)
 - [Screenshots checklist](docs/project/screenshots-checklist.md)
 - [Lessons learned](docs/project/lessons-learned.md)
-- [Interview guide](docs/career/interview-guide.md)
-- [Resume bullets](docs/career/resume-bullets.md)
 
 ## Evidence pack
 
