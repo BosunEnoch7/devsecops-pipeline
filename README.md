@@ -86,9 +86,27 @@ Some scanners require network access to vulnerability databases. See the trouble
 - [ECR promotion guide](docs/deployment/ecr-promotion-guide.md)
 - [Security guide](docs/security/security-guide.md)
 - [Troubleshooting guide](docs/operations/troubleshooting-guide.md)
+- [Evidence guide](docs/project/evidence-guide.md)
+- [Screenshots checklist](docs/project/screenshots-checklist.md)
 - [Lessons learned](docs/project/lessons-learned.md)
 - [Interview guide](docs/career/interview-guide.md)
 - [Resume bullets](docs/career/resume-bullets.md)
+
+## Evidence pack
+
+The [`screenshots`](screenshots) folder contains the evidence plan for proving the pipeline ran end to end.
+
+Recommended proof points include:
+
+- Jenkins release pipeline stage view
+- SonarQube quality gate
+- Gitleaks, Semgrep, Dependency-Check, and Trivy results
+- Terraform validation and IaC scan results
+- Amazon ECR pushed image and immutable digest
+- Manual production approval by digest
+- Application health check
+
+See the [evidence guide](docs/project/evidence-guide.md) before adding screenshots.
 
 ## Security philosophy
 
