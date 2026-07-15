@@ -1,5 +1,5 @@
-bucket         = "REPLACE_WITH_TERRAFORM_STATE_BUCKET"
+bucket         = "devsecops-pipeline-terraform-state-example"
 key            = "devsecops-pipeline/dev/terraform.tfstate"
 region         = "us-east-1"
-dynamodb_table = "REPLACE_WITH_TERRAFORM_LOCK_TABLE"
+dynamodb_table = "devsecops-pipeline-terraform-locks-example"
 encrypt        = true

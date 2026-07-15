@@ -4,7 +4,7 @@
 
 The platform now supports pushing a verified image to Amazon ECR and capturing the immutable image digest.
 
-Actual runtime deployment will be wired in a later phase.
+Actual ECS runtime deployment is documented as a future enhancement because this version focuses on secure artifact promotion and deployment readiness.
 
 ## ECR promotion
 

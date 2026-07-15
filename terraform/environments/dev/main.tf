@@ -7,6 +7,6 @@ locals {
   }
 }
 
-# AWS resources will be added in later phases.
+# AWS runtime resources are intentionally deferred until the ECS deployment enhancement.
 # This environment is intentionally minimal while the validation and security
 # gates are introduced.

@@ -373,7 +373,7 @@ pipeline {
                     APPROVED_IMAGE="$(cat "$EVIDENCE_DIR/approved-image-uri.txt")"
                     test -n "$APPROVED_IMAGE"
                     echo "$APPROVED_IMAGE" > "$EVIDENCE_DIR/deployment/deployment-image-uri.txt"
-                    echo "DEPLOYMENT_DEFERRED: ECS service deployment will be wired after runtime infrastructure is created." | tee "$EVIDENCE_DIR/deployment/status.txt"
+                    echo "DEPLOYMENT_DEFERRED: ECS service deployment is a documented future enhancement after runtime infrastructure is created." | tee "$EVIDENCE_DIR/deployment/status.txt"
                     echo "Approved digest is ready for deployment: $APPROVED_IMAGE" >> "$EVIDENCE_DIR/deployment/status.txt"
                 '''
             }

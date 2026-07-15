@@ -25,7 +25,7 @@ The Jenkins deployment stage records the approved image digest and marks deploym
 ### Trade-offs
 
 - The current project demonstrates deployment readiness, not live workload rollout.
-- A later phase must add ECS infrastructure and service update logic.
+- A future ECS enhancement must add infrastructure and service update logic.
 
 ## Security note
 

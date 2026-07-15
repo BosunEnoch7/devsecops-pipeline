@@ -27,7 +27,7 @@ LABEL org.opencontainers.image.title="secure-delivery-api" \
       org.opencontainers.image.revision="${VCS_REF}" \
       org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.vendor="Olatubosun Enoch David" \
-      org.opencontainers.image.source="https://github.com/REPLACE_WITH_OWNER/devsecops-pipeline"
+      org.opencontainers.image.source="https://github.com/BosunEnoch7/devsecops-pipeline"
 
 RUN groupadd --system --gid 10001 appgroup \
     && useradd --system --uid 10001 --gid appgroup --home-dir /app --shell /usr/sbin/nologin appuser

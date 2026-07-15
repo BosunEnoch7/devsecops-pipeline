@@ -14,24 +14,24 @@ GitHub Actions already provides fast pull request validation, but PR workflows s
 
 Use Jenkins as the trusted release orchestrator.
 
-The initial Jenkinsfile defines the release flow and evidence model, while scanner integrations are added in later phases.
+The Jenkinsfile defines the trusted release flow, evidence model, security gates, ECR promotion, digest capture, and manual approval controls.
 
 The release pipeline includes:
 
 - Trusted source checkout
 - Release context validation
 - Linting and unit tests
-- SonarQube quality gate placeholder
-- Gitleaks secret scanning placeholder
-- Semgrep SAST placeholder
-- OWASP Dependency-Check placeholder
-- Terraform validation placeholder
+- SonarQube quality gate
+- Gitleaks secret scanning
+- Semgrep SAST
+- OWASP Dependency-Check
+- Terraform validation and IaC scanning
 - Docker image build
-- Trivy container scan placeholder
+- Trivy container image scanning
 - Artifact identity capture
-- ECR push placeholder
+- ECR push and digest capture
 - Manual production approval
-- Deployment placeholder
+- Deployment readiness contract
 
 ## Consequences
 
@@ -46,7 +46,7 @@ The release pipeline includes:
 
 - Jenkins requires operational care: plugins, credentials, backups, patching, and agent management.
 - Some checks may be repeated from GitHub Actions to preserve independent release evidence.
-- The first Jenkinsfile contains placeholders until each tool is integrated and tested.
+- Jenkins requires supporting server configuration such as credentials, plugins, SonarQube webhook setup, and AWS/ECR access.
 
 ## Security note
 

@@ -17,15 +17,13 @@ This gives us a useful separation:
 - GitHub Actions: fast feedback, no production secrets, low trust.
 - Jenkins: controlled agents, security tooling, release evidence, ECR push, production approval, deployment.
 
-## Current phase
+## Current status
 
-Phase 9 creates the Jenkins release pipeline foundation.
-
-Some stages intentionally contain `PENDING` evidence files. This is not forgotten work. It is a deliberate phased buildout so each DevSecOps control can be added, tested, and explained separately.
+The Jenkinsfile now represents the trusted release pipeline for this project. It includes build/test evidence, SonarQube, Gitleaks, Semgrep, Dependency-Check, Terraform validation, Trivy IaC scanning, Docker build, Trivy image scanning, ECR push, digest capture, manual approval by digest, and deployment readiness evidence.
 
 ## Expected Jenkins agent capabilities
 
-The Jenkins agent that runs this pipeline should eventually have:
+The Jenkins agent that runs this pipeline should have:
 
 - Git
 - Java 21
@@ -38,8 +36,6 @@ The Jenkins agent that runs this pipeline should eventually have:
 - Trivy
 - Terraform
 - AWS CLI
-
-We will introduce and validate these tools one phase at a time.
 
 Gitleaks, Semgrep, Maven-based OWASP Dependency-Check, Trivy, and Terraform are now required release tools. If any required tool is missing from the Jenkins agent, the related stage must fail rather than silently pass.
 
@@ -65,7 +61,7 @@ The current Jenkinsfile uses common Pipeline features and expects these Jenkins 
 - Declarative Pipeline
 - Git
 - JUnit
-- Credentials Binding, when credentialed stages are added later
+- Credentials Binding
 - SonarQube Scanner for Jenkins
 - AnsiColor, because the pipeline enables `ansiColor('xterm')`
 
@@ -95,7 +91,7 @@ evidence/
 
 Jenkins archives this folder after every run.
 
-Evidence will eventually include:
+Evidence includes:
 
 - Commit SHA
 - Jenkins build metadata
