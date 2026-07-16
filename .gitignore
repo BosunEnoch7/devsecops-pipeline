@@ -28,3 +28,25 @@ dependency-check-report.*
 reports/
 coverage/
 .build/
+
+# Private career and job-search material - never commit
+docs/career/
+career/
+private/
+personal/
+*interview*
+*Interview*
+*STAR*
+*star-stories*
+*linkedin*
+*LinkedIn*
+*resume*
+*Resume*
+*cv*
+*CV*
+*recruiter*
+*Recruiter*
+*job-application*
+*Job-Application*
+*personal-notes*
+*Personal-Notes*
