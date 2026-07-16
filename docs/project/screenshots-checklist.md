@@ -10,12 +10,12 @@ Use the exact filenames documented in [`screenshots/README.md`](../../screenshot
 - [ ] `02-github-actions-pr-validation.png` - GitHub Actions PR validation passing
 - [ ] `03-jenkins-pipeline-stage-view.png` - Jenkins pipeline stage view
 - [ ] `04-jenkins-archived-artifacts.png` - Jenkins archived evidence artifacts
-- [ ] `05-sonarqube-quality-gate.png` - SonarQube project dashboard and quality gate
+- [x] `05-sonarqube-quality-gate.png` - SonarQube project dashboard and quality gate
 - [ ] `06-gitleaks-secret-scan.png` - Gitleaks stage output
 - [ ] `07-semgrep-sast-scan.png` - Semgrep scan output
 - [ ] `08-dependency-check-report.png` - Dependency-Check report
 - [ ] `09-docker-build-output.png` - Docker image build output
-- [ ] `10-trivy-container-scan.png` - Trivy image scan evidence
+- [x] `10-trivy-container-scan.png` - Trivy image scan evidence
 - [ ] `11-terraform-validation.png` - Terraform validation output
 - [ ] `12-trivy-iac-scan.png` - Trivy IaC scan output
 - [ ] `13-ecr-repository-image.png` - Amazon ECR repository with pushed image
